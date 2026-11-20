@@ -1,0 +1,11 @@
+{
+  "name": "link-checker-ar",
+  "version": "1.0.0",
+  "description": "فاحص الروابط: أداة تعليمية عربية تكشف علامات التصيّد في الرابط والرسالة، وتشتغل كلها داخل المتصفح",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "MIT",
+  "author": "Hassam"
+}

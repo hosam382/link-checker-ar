@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>فاحص الروابط</title>
+<meta name="description" content="الصق الرابط أو الرسالة كاملة قبل ما تضغط: الفاحص يوريك الموقع الحقيقي، ويكشف انتحال الجهات والروابط المختصرة وعبارات الاستعجال. كله داخل متصفحك وما يفتح الرابط.">
+<meta property="og:title" content="فاحص الروابط">
+<meta property="og:description" content="الصق الرابط قبل ما تضغط، ويقول لك هل هو تصيّد وليش. الفحص كله في جهازك.">
+<meta property="og:image" content="https://hosam382.github.io/link-checker-ar/og.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0e0d0c">
+<link rel="icon" href="favicon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="head">
+    <img src="seal.png" alt="" width="56" height="56">
+    <div>
+      <h1>فاحص الروابط</h1>
+      <p class="sub">الصق الرابط قبل ما تضغط، ويقول لك هل هو تصيّد وليش.</p>
+    </div>
+  </header>
+
+  <p class="privacy">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><rect x="4" y="10" width="16" height="11" rx="2.5" fill="currentColor"/></svg>
+    <span><b>الفاحص ما يفتح الرابط ولا يرسله لأحد.</b> يقرأ شكله بس، وكل شي داخل متصفحك. الصفحة نفسها ممنوعة تتصل بالإنترنت.</span>
+  </p>
+
+  <section class="card">
+    <label for="inp" class="lbl">الصق الرابط، أو الرسالة كاملة</label>
+    <textarea id="inp" rows="3" dir="auto" autocomplete="off" spellcheck="false" autocapitalize="off" autocorrect="off" maxlength="2000" placeholder="مثال: عزيزي العميل، تم إيقاف حسابك…  https://…"></textarea>
+    <div class="row">
+      <button id="paste" class="ghost" type="button">الصق من الحافظة</button>
+      <button id="clear" class="ghost" type="button" hidden>امسح</button>
+    </div>
+    <p class="hint">ما عندك رابط الحين؟ جرّب مثال:</p>
+    <div class="chips" id="samples">
+      <button class="chip" type="button" data-s="0">رسالة «أبشر» مزيّفة</button>
+      <button class="chip" type="button" data-s="1">رسالة شحنة</button>
+      <button class="chip" type="button" data-s="2">اسم يشبه PayPal</button>
+      <button class="chip" type="button" data-s="3">رابط رسمي</button>
+    </div>
+  </section>
+
+  <section class="result" aria-labelledby="label">
+    <div id="meter" class="meter m4" data-level="-1" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <p id="label" class="verdict empty">الصق عشان نفحص</p>
+    <p id="vsub" class="bits">النتيجة تطلع أول ما تلصق</p>
+    <p id="live" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+  </section>
+
+  <section id="readCard" class="card" hidden>
+    <h2>كيف ينقرأ هالرابط</h2>
+    <ol id="parts" class="parts" dir="ltr"></ol>
+    <p class="hint">الجزء الذهبي هو الموقع الحقيقي: آخر كلمتين قبل أول شرطة «/». كل اللي قبله واللي بعده يقدر صاحب الموقع يكتب فيه أي اسم يبيه.</p>
+  </section>
+
+  <section id="findCard" class="card" hidden>
+    <h2>وش لقينا</h2>
+    <ul id="findings" class="findings"></ul>
+  </section>
+
+  <section id="tipsCard" class="card" hidden>
+    <h2>وش تسوي الحين</h2>
+    <ul id="tips" class="tips"></ul>
+  </section>
+
+  <section class="card explain" aria-labelledby="howTitle">
+    <h2 id="howTitle" class="big">اقرأ أي رابط في ٥ ثواني</h2>
+    <p>المحتال ما يقدر ياخذ نطاق الجهة الرسمي، فيحط اسمها في مكان ثاني من الرابط ويعتمد إنك ما تدقق. القاعدة وحدة: <b>دوّر أول شرطة «/» بعد https://، وارجع كلمتين لورا.</b> هذا هو الموقع.</p>
+    <div class="compare">
+      <div class="ex">
+        <code dir="ltr">absher.sa<span class="dim">/login</span></code>
+        <p>قبل الشرطة: <b>absher.sa</b>. هذا موقع أبشر.</p>
+      </div>
+      <div class="ex">
+        <code dir="ltr"><span class="dim">absher.sa.</span>tahdeeth.top<span class="dim">/login</span></code>
+        <p>قبل الشرطة: <b>tahdeeth.top</b>. وأبشر مجرد كلمة في أوله.</p>
+      </div>
+    </div>
+    <p>وثلاث حيل ثانية تتكرر: حرف مبدّل في الاسم (<code dir="ltr">paypa1</code>)، ورابط مختصر يخبّي الوجهة (<code dir="ltr">bit.ly/…</code>)، وعلامة «@» وكل اللي قبلها ما له قيمة (<code dir="ltr">google.com@site.top</code>).</p>
+    <p class="bitnote"><b>والقفل 🔒 و https؟</b> يعني الاتصال مشفّر، مو إن الموقع صادق. موقع التصيّد يقدر يكون https برضو.</p>
+  </section>
+
+  <aside class="warn">
+    <b>تنبيه:</b> الفاحص تعليمي ويقرأ شكل الرابط بس، وما يعرف وش داخل الصفحة. «ما لقينا علامات خطر» مو معناها إن الرابط آمن، و«مشبوه» مو معناها إنه احتيال أكيد. وإذا شكّيت، لا تضغط.
+  </aside>
+
+  <footer class="foot">
+    <span>صنعها حسام</span>
+    <a href="https://github.com/hosam382/link-checker-ar">الكود مفتوح على GitHub</a>
+  </footer>
+</main>
+<div id="toast" class="toast" role="status" hidden></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
